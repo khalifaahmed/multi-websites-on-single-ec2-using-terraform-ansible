@@ -62,13 +62,6 @@ resource "aws_eip_association" "eip_assoc" {
   allocation_id        = aws_eip.extra_public_ip[count.index].id
 }
 
-# resource "null_resource" "sleep_command" {
-#   provisioner "local-exec" {
-#     command = "sleep 120"
-#   }
-#   depends_on = [aws_network_interface_attachment.additional_nic_assoc[0], aws_network_interface_attachment.additional_nic_assoc[1]]
-# }
-
 resource "null_resource" "httpd_multi_hosts" {
   provisioner "local-exec" {
     command = "export clinic_ip=${aws_network_interface.additional_nic[0].private_ip} clinic_dns=${aws_eip.extra_public_ip[0].public_dns} web2_ip=${aws_network_interface.additional_nic[1].private_ip} web2_dns=${aws_eip.extra_public_ip[1].public_dns} instance_ip=${aws_instance.myec2[0].public_ip}; envsubst '$clinic_ip,$clinic_dns,$web2_ip,$web2_dns,$instance_ip' < ./redhat/httpd-multi-host-vars > ./redhat/httpd-multi-host.yaml ; sleep 120 ; ansible-playbook --inventory ${aws_instance.myec2[0].public_ip}, --user ec2-user ./redhat/httpd-multi-host.yaml"

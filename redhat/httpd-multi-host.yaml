@@ -13,7 +13,7 @@
       - httpd
       - vim
       - net-tools
-      # - mysql-server
+      - mysql-server
       - mysql
       - bash-completion.noarch      
       - firewalld
@@ -29,7 +29,7 @@
         alias la='ls -alhF'
   - name: Set a hostname
     ansible.builtin.hostname:
-      name: http              
+      name: multi-websites             
   - name: start & enable httpd
     systemd: 
       name: httpd
@@ -90,10 +90,10 @@
           # Allow open access:
           Require all granted
         </Directory>
-        <VirtualHost 10.0.1.71:80>
+        <VirtualHost *:80>   # OR  <VirtualHost 10.0.1.184:80>
           ServerAdmin adfa@fadf.com
           DocumentRoot "/var/www/clinic"
-          ServerName ec2-18-217-74-151.us-east-2.compute.amazonaws.com
+          ServerName ec2-3-138-87-48.us-east-2.compute.amazonaws.com
           ErrorLog "/var/log/httpd/clinic-error_log"
           TransferLog "/var/log/httpd/clinic-access_log"
         </VirtualHost>
@@ -107,14 +107,63 @@
           # Allow open access:
           Require all granted
         </Directory>
-        <VirtualHost 10.0.1.12:80>
+        <VirtualHost *:80>   # OR  <VirtualHost 10.0.1.150:80>
           ServerAdmin web2@fadfa.com
           DocumentRoot "/var/www/web2"
-          ServerName  ec2-3-128-223-81.us-east-2.compute.amazonaws.com
+          ServerName  ec2-3-22-139-216.us-east-2.compute.amazonaws.com
           ErrorLog "/var/log/httpd/web2-error_log"
           TransferLog "/var/log/httpd/web2-access_log"
         </VirtualHost>
       create: true        
+
+  - name: start & enable mysqld
+    systemd: 
+      name: mysqld
+      state: started
+      enabled: true      
+  - name: Install docker mysql module
+    vars:
+      ansible_python_interpreter: /usr/bin/python
+    pip: 
+      name: 
+      - mysql-connector 
+      - PyMySQL   
+  # - name: Install docker python module
+  #   vars:
+  #     ansible_python_interpreter: /usr/bin/python3
+  #   pip: 
+  #     name: 
+  #     - mysql-connector          
+  - name: Create database user with password and all database privileges and 'WITH GRANT OPTION'
+    community.mysql.mysql_user:
+      name: iti
+      password: iti
+      priv: '*.*:ALL,GRANT'
+      state: present
+      host: '%'
+      # host_all: true   #not allowed here mainly
+      # session_vars:
+      #   wsrep_on: off
+  - name: Removes all anonymous user accounts
+    community.mysql.mysql_user:
+      name: 'iti'
+      host_all: true
+      state: present      
+  - name: Reconnect to server session
+    meta: reset_connection      
+  - name: Create a new database with name 'iti'
+    community.mysql.mysql_db:
+      name: iti
+      state: present
+      # login_unix_socket: /run/mysqld/mysqld.sock
+  - name: Run several insert queries against db test_db in single transaction
+    community.mysql.mysql_query:
+      login_db: iti
+      query:
+      # - create table userinfo (fname varchar(15), lname varchar(15), email varchar(30)  , constraint c1 primary key (fname))
+      # - create table userinfo (fname varchar(15), lname varchar(15), email varchar(30) )
+      - create table userinfo (id int not null auto_increment, firstname varchar(25), lastname varchar(25), age int, email varchar(40) ,constraint c1 primary key (id))
+
   - name: Reload service httpd
     ansible.builtin.systemd:
       name: httpd.service

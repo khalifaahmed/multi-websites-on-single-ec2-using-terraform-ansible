@@ -15,7 +15,7 @@ $_SESSION['email'] = $email;
 
 //echo "<br> Hello  '$firstname $lastname', your age is $age & your email is '$email'<br>";
 
-$servername = "16.171.3.0";   
+$servername = "127.0.0.1";   
 $database   = "iti";   
 $username   = "iti";     
 $password   = "iti";     

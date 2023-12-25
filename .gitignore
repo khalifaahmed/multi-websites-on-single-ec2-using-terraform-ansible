@@ -2,3 +2,5 @@
 *.tfstate*
 *terraform.tfstate*
 *key*
+*idea*
+

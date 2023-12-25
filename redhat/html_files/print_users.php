@@ -1,6 +1,6 @@
 <?php
 
-$servername = "16.171.3.0"; 
+$servername = "127.0.0.1"; 
 $database   = "iti";   
 $username   = "iti";     
 $password   = "iti";     
