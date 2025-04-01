@@ -25,7 +25,8 @@
       path: /etc/bashrc
       block: |
         alias c=clear
-        alias k=kubectl         
+        alias k=kubectl     
+        alias la='ls -laFh'
   - name: start & enable mysqld
     systemd: 
       name: mysqld
