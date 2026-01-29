@@ -31,7 +31,7 @@ data "aws_ami" "redhat" {
   owners      = ["amazon"]
   filter {
     name   = "name"
-    values = ["RHEL-9.2.0_HVM-*-GP2"]
+    values = ["RHEL-9*HVM*GP3"]
   }
   filter {
     name   = "root-device-type"

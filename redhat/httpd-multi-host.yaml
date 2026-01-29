@@ -90,10 +90,10 @@
           # Allow open access:
           Require all granted
         </Directory>
-        <VirtualHost *:80>   # OR  <VirtualHost 10.0.1.7:80>
+        <VirtualHost *:80>   # OR  <VirtualHost 10.0.1.209:80>
           ServerAdmin adfa@fadf.com
           DocumentRoot "/var/www/clinic"
-          ServerName ec2-18-216-65-194.us-east-2.compute.amazonaws.com
+          ServerName ec2-3-135-135-145.us-east-2.compute.amazonaws.com
           ErrorLog "/var/log/httpd/clinic-error_log"
           TransferLog "/var/log/httpd/clinic-access_log"
         </VirtualHost>
@@ -107,10 +107,10 @@
           # Allow open access:
           Require all granted
         </Directory>
-        <VirtualHost *:80>   # OR  <VirtualHost 10.0.1.190:80>
+        <VirtualHost *:80>   # OR  <VirtualHost 10.0.1.245:80>
           ServerAdmin web2@fadfa.com
           DocumentRoot "/var/www/web2"
-          ServerName  ec2-18-219-99-115.us-east-2.compute.amazonaws.com
+          ServerName  ec2-3-133-77-187.us-east-2.compute.amazonaws.com
           ErrorLog "/var/log/httpd/web2-error_log"
           TransferLog "/var/log/httpd/web2-access_log"
         </VirtualHost>
